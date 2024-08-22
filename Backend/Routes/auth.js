@@ -1,9 +1,11 @@
-const express = require('express')
+const express = require('express');
 var bcrypt = require('bcryptjs');
+var jwt = require('jsonwebtoken');
 const User = require('../Models/User')
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
 
+const JWT_SECRET = "Adapadakaunpada";// Should be on the secret location
 
 //Creating a user using: POST "/api/auth/createuser"
 
@@ -34,8 +36,16 @@ router.post('/createuser', [
             email: req.body.email,
             password: securePass,
         });
-        // }).then(user => res.json(user));
-        res.json(user);
+
+        //Getting the id of the user
+        const data = {
+           user:  {
+            id: user.id
+        }}
+        //Creating an authentication token for the user
+        const authData = jwt.sign(data, JWT_SECRET);
+        res.json({authData});
+
     } catch (error) {
         console.error(error.message);
         res.status(500).send("Some error occured");
