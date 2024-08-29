@@ -11,5 +11,5 @@ app.use('/api/auth', require('./Routes/auth'))
 app.use('/api/notes', require('./Routes/notes'))
 
 app.listen(port, () => {
-  console.log(`Example app listening on port http://localhost:${port}`)
+  console.log(`X-notes backend listening on port http://localhost:${port}`)
 })
