@@ -17,7 +17,7 @@ router.get('/fetchallnotes', fetchuser, async (req, res) => {
 })
 
 // ROute 2: ADD the notes using: POST "api/notes/addnotes" : Login required
-router.get('/addnotes', fetchuser, [
+router.post('/addnotes', fetchuser, [
     body('title', 'Enter a valid title.').isLength({ min: 3 }),
     body('description', 'Description should be more than 5 letters').isLength({ min: 6 })
 ], async (req, res) => {
