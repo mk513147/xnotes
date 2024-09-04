@@ -1,4 +1,5 @@
 const express = require('express');
+const User = require('../Models/User')
 var bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
 var fetchuser = require('../middleware/fetchuser')
@@ -53,13 +54,15 @@ router.post('/createuser', [
     }
 })
 
-//ROUTE: 2 Authenticate a User using: POST "/api/auth/login" : No login required
+//ROUTE: 2 Authenticate a user using: POST "/api/auth/login" : No login required
 
 router.post('/login', [
     body('email', 'Enter a valid email').isEmail(),
     body('password', 'Password should not be empty!').exists(),
 ], async (req, res) => {
     //Return bad requests and errors
+    
+    let success = false;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -69,13 +72,15 @@ router.post('/login', [
     try {
         let user = await User.findOne({ email });
         if (!user) {
+            success = false;
             return res.status(400).json({ error: "Please login with correct credentials." })
         }
 
         const passCompare = await bcrypt.compare(password, user.password);
 
         if (!passCompare) {
-            return res.status(400).json({ error: "Please login with correct credentials." })
+            success = false;
+            return res.status(400).json({success, error: "Please login with correct credentials." })
         }
 
         const data = {
@@ -85,7 +90,8 @@ router.post('/login', [
         }
 
         const authToken = jwt.sign(data, JWT_SECRET);
-        res.json({ authToken });
+        success = true;
+        res.json({ success, authToken });
 
     } catch (error) {
         console.error(error.message);
@@ -103,7 +109,7 @@ router.post('/getuser', fetchuser, async (req, res) => {
     }
 
     try {
-        userId = req.user.id;
+        let userId = req.user.id;
         const user = await User.findById(userId).select("-password");
         res.send(user);
     } catch (error) {
