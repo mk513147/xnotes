@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react';
-import { useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const [credentials, setCredentials] = useState({ email: "", password: "" })
@@ -14,18 +14,13 @@ const Login = () => {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({email: credentials.email, password: credentials.password})
+            body: JSON.stringify({ email: credentials.email, password: credentials.password })
         });
         const json = await response.json();
-        console.log(json)
-        if(json.success){
-            // save the token and redirect
-            localStorage.setItem('token', json.authtoken)
-            history("/");
-        }
-        else {
-            alert("galat hai");
-        }
+        // console.log(json)
+        // save the token and redirect
+        localStorage.setItem('token', json.authtoken)
+        history("/");
     }
 
     const onChange = (e) => {
@@ -38,7 +33,6 @@ const Login = () => {
                 <div className="mb-3">
                     <label htmlFor="email" className="form-label">Email address</label>
                     <input type="email" className="form-control" id="email" name="email" aria-describedby="emailHelp" value={credentials.email} onChange={onChange} />
-                    <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
                 </div>
                 <div className="mb-3">
                     <label htmlFor="password" className="form-label">Password</label>
