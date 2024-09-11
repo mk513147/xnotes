@@ -2,13 +2,12 @@ import React from 'react'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
+const Login = (props) => {
     const [credentials, setCredentials] = useState({ email: "", password: "" })
-    const history = useNavigate();
+    let history = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("yaha tak thik hai")
         const response = await fetch("http://localhost:5000/api/auth/login", {
             method: 'POST',
             headers: {
@@ -19,7 +18,8 @@ const Login = () => {
         const json = await response.json();
         // console.log(json)
         // save the token and redirect
-        localStorage.setItem('token', json.authtoken)
+        localStorage.setItem('token', json.authToken)
+        props.showAlert("Logged in successfully", "success")
         history("/");
     }
 
@@ -29,6 +29,7 @@ const Login = () => {
 
     return (
         <>
+            <h1 className="text-center">Login</h1>
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                     <label htmlFor="email" className="form-label">Email address</label>

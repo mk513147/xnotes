@@ -46,9 +46,9 @@ router.post('/createuser', [
             }
         }
         //Creating an authentication token for the user
-        const authData = jwt.sign(data, JWT_SECRET);
+        const authToken = jwt.sign(data, JWT_SECRET);
         success = true;
-        res.json({success, authData });
+        res.json({success, authToken });
 
     } catch (error) {
         console.error(error.message);
@@ -101,7 +101,7 @@ router.post('/login', [
     }
 })
 
-//ROUTE: 2 Get loggedin user details using: POST "/api/auth/getuser" :login required
+//ROUTE: 3 Get loggedin user details using: POST "/api/auth/getuser" :login required
 
 router.post('/getuser', fetchuser, async (req, res) => {
     //Return bad requests and errors
